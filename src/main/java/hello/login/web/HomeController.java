@@ -2,6 +2,7 @@ package hello.login.web;
 
 import hello.login.domain.member.Member;
 import hello.login.domain.member.MemberRepository;
+import hello.login.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HomeController {
 
     private final MemberRepository memberRepository;
+    private final SessionManager sessionManager;
     //@GetMapping("/")
     public String home() {
         return "home";
@@ -40,7 +43,7 @@ public class HomeController {
     //토큰은 해커가 임의의 값을 넣어도 찾을 수 없도록 예상 불가능 해야 한다.
     //해커가 토큰을 털어가도 시간이 지나면 사용할 수 없도록 서버에서 해당 토큰의 만료시간을 짧게(예: 30분)
     //유지한다. 또는 해킹이 의심되는 경우 서버에서 해당 토큰을 강제로 제거하면 된다.
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeLogin(
             @CookieValue(name = "memberId", required = false) Long memberId,
             Model model) {
@@ -56,9 +59,26 @@ public class HomeController {
         return "loginHome";
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/")
+    public String homeLoginV2(HttpServletRequest request, Model model){
+        Member member = (Member)sessionManager.getSession(request);
+        if (member == null) {
+            return "home";
+        }
+        //로그인
+        model.addAttribute("member", member);
+        return "loginHome";
+    }
+
+//    @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
         expireCookie(response, "memberId");
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logoutV2(HttpServletRequest request) {
+        sessionManager.expire(request);
         return "redirect:/";
     }
 
