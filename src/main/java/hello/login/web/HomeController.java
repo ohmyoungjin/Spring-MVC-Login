@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class HomeController {
         return "loginHome";
     }
 
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeLoginV3(HttpServletRequest request, Model model){
         //로그인 하면 생성을 해야 한다.
         //웹 페이지에 접속 했다고 해서 세션을 만들면 안된다.
@@ -82,6 +83,21 @@ public class HomeController {
 
         Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
+        if (loginMember == null) {
+            return "home";
+        }
+        //로그인
+        model.addAttribute("member", loginMember);
+        return "loginHome";
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3Spring(
+            @SessionAttribute(name= SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model){
+        //@SessionAttribute를 사용하면
+        //HttpSession session = request.getSession(false);
+        //Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
+        //세션을 따로 생성하지 않는다.
         if (loginMember == null) {
             return "home";
         }
