@@ -26,6 +26,7 @@ public class LogInterceptor implements HandlerInterceptor {
 
         //@RequestMapping : HandlerMethod
         //정적 리소스 : ResourceHttpRequestHandler
+        //정적 리소스가 넘어오는지 method가 넘어오는지 확인.
         if (handler instanceof HandlerMethod) {
             //handler = controller 정보를 가지고 있다.
             log.info("handler info {}" , handler);

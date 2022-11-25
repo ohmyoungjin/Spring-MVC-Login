@@ -2,6 +2,7 @@ package hello.login.web.filter;
 
 import hello.login.web.SessionConst;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 import javax.servlet.*;
@@ -11,8 +12,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 
+//bean으로 만들어서 의존성 주입을 해줄 수 있다
+//@Component
 @Slf4j
 public class LoginCheckFilter implements Filter {
+
 
     //로그인 검증필터에서 제외할 url
     private static final String[] whitelist = {"/", "/members/add", "/login", "/logout", "/css/*"};
@@ -48,6 +52,7 @@ public class LoginCheckFilter implements Filter {
                 }
             }
 
+            //여기에서 request response 커스텀이 가능하다 !
             chain.doFilter(request, response);
         } catch (Exception e) {
             //예외 로깅 가능 하지만, 톰캣까지 예외를 보내주어야 함
