@@ -59,7 +59,7 @@ public class LoginCheckFilter implements Filter {
     }
 
     /**
-     * 화이트 리트스의 경우 인증 체크X
+     * 화이트 리스트의 경우 인증 체크X
      */
     private boolean isLoginCheckPath(String requestURI) {
         //Spring 에서 제공 하는 pattern check 유틸

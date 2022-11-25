@@ -97,11 +97,13 @@ public class LoginController {
         return "redirect:/";
     }
 
+    //@RequestParam : 로그인 필터에서 넘어온 redirectURL 정보를 받아서 사용자가 사용하려던 페이지로 넘겨준다
     @PostMapping("/login")
     public String loginV4(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult,
                           @RequestParam(defaultValue = "/") String redirectURL,
                           HttpServletRequest request) {
-        //로그인 필터에서 넘어온 redirectURL 정보를 받아서 사용자가 사용하려던 페이지로 넘겨준다
+
+
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
